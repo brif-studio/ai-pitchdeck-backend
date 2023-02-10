@@ -1,0 +1,85 @@
+const { Sequelize, DataTypes } = require('sequelize')
+require('dotenv').config()
+
+const connectDb = () => {
+
+    const sequelize = new Sequelize(
+        process.env.DB,
+        process.env.USER,
+        process.env.PASSWORD, {
+        host: process.env.HOST,
+        dialect: process.env.DIALECT,
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        }
+    })
+
+    sequelize.authenticate()
+        .then(() => {
+            console.log('connected..')
+        })
+        .catch(err => {
+            console.log('Error' + err)
+        })
+
+
+    const db = {}
+    db.Sequelize = Sequelize
+    db.sequelize = sequelize
+
+    db.pitchDecks = require('../models/PitchDeck.model')(sequelize, DataTypes)
+    db.users = require('../models/User.model')(sequelize, DataTypes)
+    db.roles = require('./role.model')(sequelize, DataTypes)
+    db.verificationCodes = require('./verificationCode.model')(sequelize, DataTypes)
+    db.refreshTokens = require('./refreshToken.model.js')(sequelize, DataTypes)
+    db.userTokens = require('./userToken.model.js')(sequelize, DataTypes)
+
+
+    //UserTokens
+    db.userTokens.belongsTo(db.users, {
+        foreignKey: 'userId',
+        targetKey:'id'
+    })
+    db.users.hasOne(db.userTokens, {
+        foreignKey: 'userId',
+        targetKey:'id'
+    })
+    //UserTokens-End
+
+    //RefreshTokens
+    db.refreshTokens.belongsTo(db.users, {
+        foreignKey: 'userId',
+        targetKey:'id'
+    })
+    db.users.hasOne(db.refreshTokens, {
+        foreignKey: 'userId',
+        targetKey:'id'
+    })
+    //RefreshTokens-End
+
+    //UserRoles
+    db.users.belongsToMany(db.roles,{through:'user_roles'})
+    db.roles.belongsToMany(db.users,{through:'user_roles'})
+
+    db.users.hasMany(db.verificationCodes)
+    db.verificationCodes.belongsTo(db.users)
+    //UserRoles-Ends
+
+
+    db.users.hasMany(db.pitchDecks)
+    db.pitchDecks.belongsTo(db.users)
+
+    db.sequelize.sync()
+        .then(() => {
+            console.log('yes re-sync done!')
+        })
+
+    return db
+}
+
+module.exports = {
+    connectDb
+}
