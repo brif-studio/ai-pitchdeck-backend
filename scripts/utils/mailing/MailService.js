@@ -1,4 +1,4 @@
-const nodemailerService = require('./nodemailer/NodemailerService')
+const NodemailerService = require('./nodemailer/NodemailerService')
 
 class MailService{
     constructor(mailService){
@@ -6,7 +6,7 @@ class MailService{
     }
 
     sendMail(mail){
-        return this.mailService.sendMail
+        return this.mailService.sendMail(mail)
     }
 }
 

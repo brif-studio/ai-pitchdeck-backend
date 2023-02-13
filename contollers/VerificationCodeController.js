@@ -1,6 +1,7 @@
 const UserService = require('../services/Sequelize/UserService')
 const VerificationCodeService = require('../services/Sequelize/VerificationCodeService')
 const { decodeToken, verifyEmailVerificationCode } = require('../scripts/helpers/hashHelper')
+require('express-async-errors')
 
 class VerificationCodeController{
 

@@ -2,14 +2,14 @@ const SequelizeBaseService = require('./SequelizeBaseService')
 const { refreshTokens } = require('../../loaders').db
 const UserService = require('./UserService')
 const { v4:uuidv4 } = require('uuid');
-const AuthError = require('../scripts/utils/Errors/AuthError')
+const { AuthError } = require('../../scripts/utils/Errors')
 
 class RefreshTokenService extends SequelizeBaseService{
     constructor(){
         super(refreshTokens)
     }
 
-    async add(){
+    async add(userId){
         const user = await UserService.getById(userId);
         const userToken = await this.getOneFiltered({userId:userId});
         if (userToken) {
@@ -31,7 +31,7 @@ class RefreshTokenService extends SequelizeBaseService{
     }
 
     async deleteUserRefreshToken(userId){
-        const token = await refreshTokenRepository.getOneFiltered({ userId:userId});
+        const token = await this.getOneFiltered({ userId:userId});
         await this.entityType.destroy({where:{id:token.id}});
     }
 }

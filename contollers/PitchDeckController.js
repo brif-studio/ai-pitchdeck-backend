@@ -5,12 +5,12 @@ const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = requi
 class PitchDeckController{
     async getAll(req, res){
         const data = await PitchDeckService.getAll()
-        res.status(httpStatus[200]).json(new SuccessDataResult(null, data))
+        res.status(200).json(new SuccessDataResult(null, data))
     }
 
     async getById(req, res){
         const data = await PitchDeckService.getById(req.params.id)
-        res.status(httpStatus[200]).json(new SuccessDataResult(null, data))
+        res.status(200).json(new SuccessDataResult(null, data))
     }
 }
 

@@ -32,10 +32,10 @@ const connectDb = () => {
 
     db.pitchDecks = require('../models/PitchDeck.model')(sequelize, DataTypes)
     db.users = require('../models/User.model')(sequelize, DataTypes)
-    db.roles = require('./role.model')(sequelize, DataTypes)
-    db.verificationCodes = require('./verificationCode.model')(sequelize, DataTypes)
-    db.refreshTokens = require('./refreshToken.model.js')(sequelize, DataTypes)
-    db.userTokens = require('./userToken.model.js')(sequelize, DataTypes)
+    db.roles = require('../models/Role.model')(sequelize, DataTypes)
+    db.verificationCodes = require('../models/VerificationCode.model.js')(sequelize, DataTypes)
+    db.refreshTokens = require('../models/RefreshToken.model')(sequelize, DataTypes)
+    db.userTokens = require('../models/UserToken.model')(sequelize, DataTypes)
 
 
     //UserTokens
@@ -72,7 +72,7 @@ const connectDb = () => {
     db.users.hasMany(db.pitchDecks)
     db.pitchDecks.belongsTo(db.users)
 
-    db.sequelize.sync()
+    db.sequelize.sync({force:false})
         .then(() => {
             console.log('yes re-sync done!')
         })

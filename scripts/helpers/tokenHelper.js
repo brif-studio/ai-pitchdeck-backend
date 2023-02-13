@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const hashHelper = require('./hashHelper.js')
-const { AuthError } = require('./errors')
+const { AuthError } = require('../utils/Errors')
 require('dotenv').config()
 
 const createToken = (payload) => {
@@ -12,7 +12,7 @@ const createRefreshToken = (payload) => {
 }
 
 const checkUser = (user,password) => {
-    const result = hashHelper.compareHash(password, user.passwordHash)
+    const result = hashHelper.compareHash(password, user.password)
     return result
 }
 

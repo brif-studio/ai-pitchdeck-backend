@@ -1,6 +1,9 @@
-class AuthError extends Error{
-    constructor(message=null,){
-        super(message)
+const BaseError = require('./BaseError')
+const  httpStatus = require('http-status')
+
+class AuthError extends BaseError {
+    constructor(description = 'bad request') {
+        super('Authentication Error', httpStatus.UNAUTHORIZED, description, true);
     }
 }
 

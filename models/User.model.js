@@ -8,12 +8,17 @@ module.exports = (sequelize, DataTypes) => {
         email:{
             type:DataTypes.STRING
         },
+        userName:{
+            type:DataTypes.STRING
+        },
         password:{
             type:DataTypes.STRING
         },
         emailConfirmed:{
             type:DataTypes.BOOLEAN
         }
+    },{
+        underscored:true
     })
     return User
 }

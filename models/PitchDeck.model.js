@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         meta: {
             type:DataTypes.JSON
         }
+    },{
+        underscored:true
     })
     return PitchDeck
 }
