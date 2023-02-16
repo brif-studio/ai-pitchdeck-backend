@@ -1,0 +1,21 @@
+{
+"user-id":"",
+"pitch-deck-id":"",
+"template":"pitch-deck",
+"slides":[
+    {
+        "index":1,
+        "slide-text":"example text",
+        "slide-images":[
+            {
+                "index":1,
+                "image-url":"https://www.example.com/image-name"
+            },
+            {
+                "index":2,
+                "image-url":"https://www.example.com/image-name"
+            }
+        ]
+    }
+]
+}

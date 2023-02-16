@@ -8,12 +8,12 @@ const openai = new OpenAIApi(configuration)
 
 const createCompletion = async (options) => {
     const response = await openai.createCompletion(options)
-    return response.data.choices
+    return response.data.choices[0].text
 }
 
 const generateImages = async(options) => {
     const response = await openai.createImage(options)
-    return response.data.data
+    return response.data.data[0].url
 }
 
 module.exports = {createCompletion, generateImages, openai}
