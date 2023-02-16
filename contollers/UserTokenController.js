@@ -8,7 +8,6 @@ require('express-async-errors')
 
 class UserTokenController{
     async verifyUserTokenAndChangePassword(req, res){
-        console.log(req.params.token)
         const userToken = await UserTokenService.getOneFiltered({token:req.params.token, active:false})
         if (!userToken) {
             throw new AuthError('Token not found!')
@@ -19,7 +18,6 @@ class UserTokenController{
             throw new AuthError('Refresh token is expired. Please login again!')
         }else{
             const user = await UserService.getOneFiltered({id:userToken.userId})
-            console.log(user)
             user.password = hashTextWithSalt(req.body.newPassword,10)
             user.save()
             userToken.active = true
