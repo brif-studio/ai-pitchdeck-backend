@@ -10,6 +10,16 @@ class PitchDeckController {
         res.status(200).json(new SuccessDataResult(null, data))
     }
 
+    async getChat(req, res){
+        const data = req.body
+        const answer = await createCompletion({
+            model:'text-davinci-003',
+            prompt: `${data.question}-make the explanation in a few sentences.`,
+            temperature: 1,
+            max_tokens:300})
+        res.status(200).json(new SuccessDataResult(null, answer))
+    }
+
     async getById(req, res) {
         const data = await PitchDeckService.getById(req.params.id)
         res.status(200).json(new SuccessDataResult(null, data))

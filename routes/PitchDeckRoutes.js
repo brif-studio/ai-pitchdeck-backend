@@ -6,5 +6,6 @@ router.route('/').get(AuthMiddleware('Admin'), PitchDeckController.getAll)
 router.route('/getByUserId').get(AuthMiddleware('Admin,User'),PitchDeckController.getByUserId)
 router.route('/:id').get(AuthMiddleware('Admin,User'),PitchDeckController.getById)
 router.route('/add').post(AuthMiddleware('Admin,User'),PitchDeckController.generatePitchDeck)
+router.route('/chat').post(AuthMiddleware('Admin,User'),PitchDeckController.getChat)
 
 module.exports = router
