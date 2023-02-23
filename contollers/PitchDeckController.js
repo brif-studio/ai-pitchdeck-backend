@@ -59,6 +59,18 @@ class PitchDeckController {
     }
 }
 
+module.exports = {
+    setData: () => {
+        this.q1 = responses.fifthQuestion;
+        this.q2 = responses.secondQuestion;
+        this.q3 = responses.thirdQuestion;
+        this.q4 = responses.fourthQuestion;
+        this.q5 = responses.fifthQuestion;
+        this.q6 = responses.sixthQuestion;
+        this.q7 = responses.seventhQuestion;
+        this.q10 = responses.tenthQuestion;
+    }
+}
 class textInputs {
     constructor(responses) {
       this.q1 = responses.fifthQuestion;

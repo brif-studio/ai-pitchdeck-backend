@@ -1,18 +1,16 @@
-const datas = require('../contollers/PitchDeckController.js')
+const {setData, textInputs} = require('../contollers/PitchDeckController.js');
 
 class promts {
-    constructor(textIn) {
-      this.q1Promt = `Split this text ${textIn} into these 
+      q1Promt = `Split this text ${textInputs.q1} into these 
       #namesurname #email #phonenumber #startupname 
       keywords. Result as json format.`;
-      this.q2 = q2;
-      this.q3 = q3;
-      this.q4 = q4;
-      this.q5 = q5;
-      this.q6 = q6;
-      this.q7 = q7;
-      this.q8 = q8;
-      this.q9 = q9;
-      this.q10 = q10;
-    }
+      q2 = q2;
+      q3 = q3;
+      q4 = q4;
+      q5 = q5;
+      q6 = q6;
+      q7 = q7;
+      q8 = q8;
+      q9 = q9;
+      q10 = q10;
 }
