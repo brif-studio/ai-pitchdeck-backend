@@ -3,6 +3,7 @@ const PitchDeckService = require('../services/Sequelize/PitchDeckService')
 const { createCompletion, generateImages } = require('../scripts/helpers/openaiHelper')
 const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = require('../scripts/utils/results')
 const { decodeToken } = require('../scripts/helpers/hashHelper')
+const datas = require('../config/openai')
 
 class PitchDeckController {
     async getAll(req, res) {
@@ -17,7 +18,7 @@ class PitchDeckController {
             prompt: `${data.question}-make the explanation in a few sentences.`,
             temperature: 1,
             max_tokens:300})
-        res.status(200).json(new SuccessDataResult(null, answer))
+        res.status(200).json(new SuccessDataResult(null, answer)) 
     }
 
     async getById(req, res) {
@@ -57,6 +58,20 @@ class PitchDeckController {
         res.status(200).json(new SuccessDataResult(null, data))
     }
 }
+
+class textInputs {
+    constructor(responses) {
+      this.q1 = responses.fifthQuestion;
+      this.q2 = responses.secondQuestion;
+      this.q3 = responses.thirdQuestion;
+      this.q4 = responses.fourthQuestion;
+      this.q5 = responses.fifthQuestion;
+      this.q6 = responses.sixthQuestion;
+      this.q7 = responses.seventhQuestion;
+      this.q10 = responses.tenthQuestion; 
+    }
+}
+module.exports = textInputs;
 
 const getPitchDeckInformations = async (responses) => {
     const firstSlideText = await createCompletion({
