@@ -1,7 +1,7 @@
 const {setData, textInputs} = require('../contollers/PitchDeckController.js');
 
 class promts {
-      q1Promt = `Split this text ${textInputs.q1} into these 
+      q1Promt = `Split this text ${setData().q1} into these 
       #namesurname #email #phonenumber #startupname 
       keywords. Result as json format.`;
       q2 = q2;

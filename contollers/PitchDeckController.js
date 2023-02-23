@@ -69,6 +69,8 @@ module.exports = {
         this.q6 = responses.sixthQuestion;
         this.q7 = responses.seventhQuestion;
         this.q10 = responses.tenthQuestion;
+
+        return {q1, q2, q3, q4, q5, q6, q7, q8, q9, q10}
     }
 }
 class textInputs {
