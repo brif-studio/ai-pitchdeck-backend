@@ -37,8 +37,7 @@ class PitchDeckController {
         const pitchDeckInformation = await getPitchDeckInformations(responses)
         const pitchDeckSlides = await generatePitchDeckSlides(pitchDeckInformation, responses)
         const pitchDeck = {
-            "user-id":"",
-            "pitch-deck-id":"",
+            "user-id":`${userId}`,
             "template":"pitch-deck",
             "slides":pitchDeckSlides
         }
@@ -294,6 +293,17 @@ const getPitchDeckInformations = async (responses) => {
 const generatePitchDeckSlides = async(answers, responses) => {
     const pitchDeckSlides = []
     pitchDeckSlides.push({
+        "slide-type":'introducing',
+        "company-details":{
+            "name-surname":responses.companyDetails.nameSurname,
+            "title":responses.companyDetails.title,
+            "email":responses.companyDetails.email,
+            "phone-number":responses.companyDetails.phoneNumber,
+            "startup-name":responses.companyDetails.startupName,
+            "date":responses.companyDetails.date
+        }
+    })
+    pitchDeckSlides.push({
         "slide-text":answers.problemExplanation,
         "slide-images":[{
                 "image-url":answers.secondSlideImage
@@ -349,7 +359,15 @@ const generatePitchDeckSlides = async(answers, responses) => {
     })
     pitchDeckSlides.push({
         "slide-text":answers.timePlanExplanation,
-        "css-code":answers.tenthSlideTextAsCss
+        "css-code":answers.tenthSlideTextAsCss,
+        "time-plan-details":{
+            "enterprise-release-date":responses.timePlanDetails.enterpriseReleaseDate,
+            "company-release-date":responses.timePlanDetails.companyReleaseDate,
+            "first-demo-release-date":responses.timePlanDetails.firstDemoReleaseDate,
+            "first-map-release-date":responses.timePlanDetails.firstMapReleaseDate,
+            "first-investment-round-date":responses.timePlanDetails.firstInvestmentRoundDate,
+            "product-finalized-date":responses.timePlanDetails.productFinalizedDate
+        }
     })
     return pitchDeckSlides
 
