@@ -57,10 +57,8 @@ class PitchDeckController {
         })
         res.status(200).json(new SuccessDataResult(null, data))
     }
-}
 
-module.exports = {
-    setData: () => {
+    async textInputs (responses){
         this.q1 = responses.fifthQuestion;
         this.q2 = responses.secondQuestion;
         this.q3 = responses.thirdQuestion;
@@ -69,23 +67,10 @@ module.exports = {
         this.q6 = responses.sixthQuestion;
         this.q7 = responses.seventhQuestion;
         this.q10 = responses.tenthQuestion;
-
+    
         return {q1, q2, q3, q4, q5, q6, q7, q8, q9, q10}
     }
 }
-class textInputs {
-    constructor(responses) {
-      this.q1 = responses.fifthQuestion;
-      this.q2 = responses.secondQuestion;
-      this.q3 = responses.thirdQuestion;
-      this.q4 = responses.fourthQuestion;
-      this.q5 = responses.fifthQuestion;
-      this.q6 = responses.sixthQuestion;
-      this.q7 = responses.seventhQuestion;
-      this.q10 = responses.tenthQuestion; 
-    }
-}
-module.exports = textInputs;
 
 const getPitchDeckInformations = async (responses) => {
     const firstSlideText = await createCompletion({
