@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
     "pg-hstore": "^2.3.4",
     "rand-token": "^1.0.1",
     "sequelize": "^6.28.0",
+    "sqlite3": "^5.1.6",
     "uuid": "^9.0.0"
   }
 }

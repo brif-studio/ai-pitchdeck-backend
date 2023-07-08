@@ -3,19 +3,10 @@ require('dotenv').config()
 
 const connectDb = () => {
 
-    const sequelize = new Sequelize(
-        process.env.DB,
-        process.env.USER,
-        process.env.PASSWORD, {
-        host: process.env.HOST,
-        dialect: process.env.DIALECT,
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        }
-    })
+    const sequelize = new Sequelize({
+        dialect: process.env.DIALECT_TEST,
+        storage: process.env.STORAGE_TEST
+      });
 
     sequelize.authenticate()
         .then(() => {
