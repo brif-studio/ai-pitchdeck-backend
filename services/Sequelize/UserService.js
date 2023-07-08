@@ -19,8 +19,7 @@ class UserService extends SequelizeBaseService{
 
     async getByUserNameOrEmail(userNameOrEmail){
         const user = await this.getOneFiltered({[Op.or]:[{email:userNameOrEmail},{userName:userNameOrEmail}]})
-        let isEmpty = Object.keys(user).length === 0
-        if(!isEmpty){
+        if(user){
             return user
         } 
         return null
