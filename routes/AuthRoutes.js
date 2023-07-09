@@ -3,7 +3,7 @@ const AuthController = require('../contollers/AuthController')
 const RefreshTokenController = require('../contollers/RefreshTokenController')
 const UserTokenController = require('../contollers/UserTokenController')
 const userValidationRules = require('../validationRules/userValidationRules')
-const ValidationMiddleware = require('../middlewares/validationMiddleware').validate
+const ValidationMiddleware = require('../middlewares/ValidationMiddleware').validate
 
 router.route('/login').post(AuthController.login)
 router.route('/register').post(ValidationMiddleware(userValidationRules), AuthController.register)
