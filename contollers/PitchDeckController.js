@@ -3,6 +3,8 @@ const PitchDeckService = require('../services/Sequelize/PitchDeckService')
 const { createCompletion, generateImages } = require('../scripts/helpers/openaiHelper')
 const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = require('../scripts/utils/results')
 const { decodeToken } = require('../scripts/helpers/hashHelper')
+const { AuthError } = require('../scripts/utils/Errors')
+require('express-async-errors')
 
 class PitchDeckController {
     async getAll(req, res) {
