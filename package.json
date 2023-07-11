@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "npm install & npx sequelize-cli db:migrate",
+    "migrate:up": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +32,7 @@
     "pg-hstore": "^2.3.4",
     "rand-token": "^1.0.1",
     "sequelize": "^6.28.0",
+    "sequelize-cli": "^6.6.1",
     "sqlite3": "^5.1.6",
     "uuid": "^9.0.0"
   }

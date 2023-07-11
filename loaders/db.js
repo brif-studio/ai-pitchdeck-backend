@@ -1,11 +1,14 @@
 const { Sequelize, DataTypes } = require('sequelize')
 require('dotenv').config()
+const dbConfig = require('../config/database')[process.env.NODE_ENV]
+
+
 
 const connectDb = () => {
 
     const sequelize = new Sequelize({
-        dialect: process.env.DIALECT_TEST,
-        storage: process.env.STORAGE_TEST
+        dialect: dbConfig.dialect,
+        storage: dbConfig.storage,
       });
 
     sequelize.authenticate()
@@ -59,14 +62,8 @@ const connectDb = () => {
     db.verificationCodes.belongsTo(db.users)
     //UserRoles-Ends
 
-
     db.users.hasMany(db.pitchDecks)
     db.pitchDecks.belongsTo(db.users)
-
-    db.sequelize.sync({force:false})
-        .then(() => {
-            console.log('yes re-sync done!')
-        })
 
     return db
 }

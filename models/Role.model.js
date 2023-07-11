@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
     const Role = sequelize.define('role', {
         id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
+            type:DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey:true
         },
         name:{
             type:DataTypes.STRING
