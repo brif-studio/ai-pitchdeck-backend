@@ -1,11 +1,24 @@
 require('dotenv').config()
 module.exports = {
     "development": {
-        "storage":"./db/db-test.sqlite3",
-        "dialect": "sqlite"
+        "username": process.env.DB_USER,
+        "password": process.env.DB_PASS,
+        "database": process.env.DB_NAME,
+        "host": process.env.DB_HOST,
+        "dialect": "mysql"
+    },
+    "test":{
+        "username": process.env.DB_USER,
+        "password": process.env.DB_PASS,
+        "database": process.env.DB_NAME,
+        "host": process.env.DB_HOST,
+        "dialect": "mysql"
     },
     "production": {
-        "storage":"./db/db.sqlite3",
-        "dialect": "sqlite"
-    }
+        "username": process.env.DB_USER,
+        "password": process.env.DB_PASS,
+        "database": process.env.DB_NAME,
+        "host": process.env.DB_HOST,
+        "dialect": "mysql"
+      },
   }
