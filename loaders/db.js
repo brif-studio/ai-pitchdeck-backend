@@ -6,10 +6,15 @@ const dbConfig = require('../config/database')[process.env.NODE_ENV]
 
 const connectDb = () => {
 
-    const sequelize = new Sequelize({
+    const sequelize = new Sequelize(
+        dbConfig.database,
+        dbConfig.username,
+        dbConfig.password, {
+        host: dbConfig.host,
         dialect: dbConfig.dialect,
-        storage: dbConfig.storage,
-      });
+        operatorsAliases: false
+    }
+    );
 
     sequelize.authenticate()
         .then(() => {
