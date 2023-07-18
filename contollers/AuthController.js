@@ -1,4 +1,5 @@
 const UserService = require('../services/Sequelize/UserService')
+const UserWalletService = require('../services/Sequelize/UserWalletService')
 const { checkUser, createToken, verifyToken } = require('../scripts/helpers/tokenHelper')
 const { hashTextWithSalt } = require('../scripts/helpers/hashHelper')
 const RefreshTokenService = require('../services/Sequelize/RefreshTokenService')
@@ -41,6 +42,7 @@ class AuthController{
         const addedUser = await UserService.add(body)
         await VerificationCodeService.add(addedUser.id)
         await RoleService.addRoleToUser('User', addedUser)
+        await UserWalletService.add({userId: addedUser.id})
         const responseData = {
             token: createToken({ id: addedUser.id, email: addedUser.email }),
             refreshToken: await RefreshTokenService.add(addedUser.id)

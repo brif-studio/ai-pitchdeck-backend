@@ -35,6 +35,7 @@ const connectDb = () => {
     db.verificationCodes = require('../models/VerificationCode.model.js')(sequelize, DataTypes)
     db.refreshTokens = require('../models/RefreshToken.model')(sequelize, DataTypes)
     db.userTokens = require('../models/UserToken.model')(sequelize, DataTypes)
+    db.userWallets = require('../models/UserWallet.model')(sequelize, DataTypes)
 
 
     //UserTokens
@@ -69,6 +70,9 @@ const connectDb = () => {
 
     db.users.hasMany(db.pitchDecks)
     db.pitchDecks.belongsTo(db.users)
+ 
+    db.users.hasMany(db.userWallets)
+    db.userWallets.belongsTo(db.users)
 
     return db
 }

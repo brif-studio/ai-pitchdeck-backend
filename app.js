@@ -2,7 +2,7 @@ const config = require('./config')
 const loaders = require('./loaders')
 const express = require('express')
 const cors = require('cors')
-const { PitchDeckRoutes, AuthRoutes } = require('./routes')
+const { PitchDeckRoutes, AuthRoutes, UserWalletRoutes } = require('./routes')
 require('express-async-errors')
 
 config()
@@ -16,6 +16,7 @@ app.listen(process.env.PORT, () => {
 
     app.use('/api/pitch-decks', PitchDeckRoutes)
     app.use('/api/auth', AuthRoutes)
+    app.use('/api/user-wallets', UserWalletRoutes)
 
     const errorMiddleware = require('./middlewares/ErrorMiddleware')
     app.use(errorMiddleware)

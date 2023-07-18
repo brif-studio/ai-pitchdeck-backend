@@ -1,5 +1,6 @@
 const httpStatus = require('http-status')
 const PitchDeckService = require('../services/Sequelize/PitchDeckService')
+const UserWalletService = require('../services/Sequelize/UserWalletService')
 const { createCompletion, generateImages } = require('../scripts/helpers/openaiHelper')
 const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = require('../scripts/utils/results')
 const { decodeToken } = require('../scripts/helpers/hashHelper')
@@ -36,6 +37,7 @@ class PitchDeckController {
     async generatePitchDeck(req, res) {
         const userId = decodeToken(req.headers.authorization.split(' ')[1]).id
         const responses = req.body
+        await UserWalletService.checkEnoughCredit(userId)
         const pitchDeckInformation = await getPitchDeckInformations(responses)
         const pitchDeckSlides = await generatePitchDeckSlides(pitchDeckInformation, responses)
         const pitchDeck = {
@@ -46,6 +48,7 @@ class PitchDeckController {
         const pitchDeckJson = JSON.stringify(pitchDeck)
         const picthDeckForAdd = {userId:userId, meta:pitchDeckJson}
         const addedPitchDeck = await PitchDeckService.add(picthDeckForAdd)
+        await UserWalletService.decreaseUserCredit(userId)
         res.status(200).json(new SuccessDataResult(null, addedPitchDeck))
     }
 
