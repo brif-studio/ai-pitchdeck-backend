@@ -48,7 +48,7 @@ class PitchDeckController {
         //     "slides":pitchDeckSlides
         // }
         // const pitchDeckJson = JSON.stringify(pitchDeck)
-        const picthDeckForAdd = { userId: userId }
+        const picthDeckForAdd = { userId: userId, isCreated: false }
         const addedPitchDeck = await PitchDeckService.add(picthDeckForAdd)
         await UserWalletService.decreaseUserCredit(userId)
         const rabbitmqData = { responses: responses, pitchDeck: addedPitchDeck, userToken: req.headers.authorization }
