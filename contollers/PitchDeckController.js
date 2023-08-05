@@ -1,6 +1,6 @@
 const httpStatus = require('http-status')
 const PitchDeckService = require('../services/Sequelize/PitchDeckService')
-const { createCompletion, generateImages } = require('../scripts/helpers/openaiHelper')
+const { createChatCompletion, generateImages } = require('../scripts/helpers/openaiHelper')
 const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = require('../scripts/utils/results')
 const { decodeToken } = require('../scripts/helpers/hashHelper')
 const { AuthError } = require('../scripts/utils/Errors')
@@ -60,7 +60,7 @@ class PitchDeckController {
 }
 
 const getPitchDeckInformations = async (responses) => {
-    const companyAnalyzer = await openai.createChatCompletion({
+    const companyAnalyzer = await createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
           {
@@ -77,7 +77,7 @@ const getPitchDeckInformations = async (responses) => {
           },
           {
             "role": "user",
-            "content": "${responses.firstQuestion}, "
+            "content": "${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}`, ${responses.seventhQuestion}`"
           }
         ],
         temperature: 1,
@@ -87,7 +87,7 @@ const getPitchDeckInformations = async (responses) => {
         presence_penalty: 0,
       });
 
-    const pitchDeckFinal = await openai.createChatCompletion({
+    const pitchDeckFinal = await createChatCompletion({
         model: "gpt-3.5-turbo-16k",
         messages: [
           {
@@ -104,7 +104,7 @@ const getPitchDeckInformations = async (responses) => {
           },
           {
             "role": "user",
-            "content": ""
+            "content": "${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}`, ${responses.seventhQuestion}`; ${companyAnalyzer} "
           }
         ],
         temperature: 1,
