@@ -33,6 +33,7 @@
     "rand-token": "^1.0.1",
     "sequelize": "^6.28.0",
     "sequelize-cli": "^6.6.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "validator": "^13.11.0"
   }
 }
