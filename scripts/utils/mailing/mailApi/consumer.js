@@ -21,9 +21,9 @@ async function connect_rabbitmq() {
         const connection = await amqp.connect("amqp://localhost:5672");
         const channel = await connection.createChannel();
 
-        await channel.assertQueue("mailQueue");
+        await channel.assertQueue("mailSender");
         console.log("Mesaj bekleniyor... ");
-        channel.consume("mailQueue", (msg) => {
+        channel.consume("mailSender", (msg) => {
             let parse = JSON.parse(msg.content.toString());
 
             switch (parse.from) {                  //hangi mail adresinden maili atacağımızı belirlemk için
