@@ -19,7 +19,7 @@ class NodemailerService{
         this.createTransport(null).sendMail(
             {
                 to: mail.to,
-                from: '"Denem mail" <support@linyit.net>',
+                from: mail.from,
                 subject: mail.subject,
                 html: mail.html,
             },
