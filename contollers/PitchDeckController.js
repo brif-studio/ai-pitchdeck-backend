@@ -4,6 +4,7 @@ const { createChatCompletion, generateImages } = require('../scripts/helpers/ope
 const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = require('../scripts/utils/results')
 const { decodeToken } = require('../scripts/helpers/hashHelper')
 const { AuthError } = require('../scripts/utils/Errors')
+const { json } = require('sequelize')
 require('express-async-errors')
 
 class PitchDeckController {
@@ -14,11 +15,24 @@ class PitchDeckController {
 
     async getChat(req, res){
         const data = req.body
-        const answer = await createCompletion({
-            model:'text-davinci-003',
-            prompt: `${data.question}-make the explanation in a few sentences.`,
+        const answer = await createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                "role": "system",
+                "You are an assistant of a company called Brif. This company is making pitch decks with the help of AI. Users are answering 10 questions and the answers are used to create and analyze the company that is answering and want to create a pitch deck. companies might have trouble with some of the questions because they might not know some of the terms. When they have questions, they will come to you to answer their questions. Your duty is answering users' questions clear, short, and simple. You can not answer questions that are out of context. For example, if someone asks the president of the USA; you can not answer this. you should say ‘this question is out of the context, i can not assist with that kind of questions please ask me about business, pitch decks, economics, marketplace, target customers, problems around the world, solutions, metrics, time planning topics. etc.’ as an answer to those kinds of regular questions. your duty is not answering regular questions. It must be about business, pitch decks, economics, marketplace, target customers, problems around the world, solutions, metrics, time planning etc."
+              },
+              {
+                "role": "user",
+                "content": '${data.quesiton}'
+              }
+            ],
             temperature: 1,
-            max_tokens:300})
+            max_tokens: 1024,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+          })
         res.status(200).json(new SuccessDataResult(null, answer))
     }
 
@@ -58,6 +72,7 @@ class PitchDeckController {
         res.status(200).json(new SuccessDataResult(null, data))
     }
 }
+
 
 const getPitchDeckInformations = async (responses) => {
     const companyAnalyzer = await createChatCompletion({
@@ -100,11 +115,11 @@ const getPitchDeckInformations = async (responses) => {
           },
           {
             "role": "assistant",
-            "content": "[\n{\n\"q1_text\":\"Mercury.tech\\n Görkem Yağcı(CEO)\\n ertugrultunc38@gmail.com\",\n\"q1_image\":\"Amazing view of a planet on space\"\n},\n{\n\"q2_text\":\"here is a graphic designer:(he wants to make a portfolio site but don't know how to code it)\"\n},\n{\n\"q2_image\":\"Image of a sad man.\"\n},\n{\n\"q3_text\":\"Oh! Look at it there. Here is a developer man that wants to make a logo for his startup. They can meet on Mercury.tech!\",\n\"q3_image\":\"Image of a person holding a lightbulb.\"\n},\n{\n\"q4_text\":\"-Redefining labor exchange with a focus on skill-based matching and cooperation. Safe environment that fosters cooperation\\n- Customized system for different business categories\\n- Monetization through non-monetary labor exchanges.\\n We are the only ones in the market who do this job\",\n\"q4_image\":\"Image of a handshake\"\n},\n{\n\"q5_text\":\"Our algorithm!  We designed an advanced algorithm that matches individuals based on their needs and expertise with technical infrastructure and integrations such as Node.js, PostgreSQL, RabbitMQ and a special artificial intelligence, where everyone can exchange business with each other in the fastest and most reliable way.\",\n\"q5_image\":\"Image of a castle\"\n},\n{\n\"q6_text\":\"You! Everyone in the freelance sector. Individuals and teams seeking suitable workforce or job positions. Freelancers\\n- Startups and small businesses\\n- Teams looking to collaborate on projects\",\n\"q6_image\":\"Image of crowded people\"\n},\n{\n\"q7_text\":\"-Growth through cooperation and paid business plans \\n Focus on cooperation and long-term partnerships\\n- Paid business plans to generate revenue\\n- Expansion into new markets and industries\",\n\"q7_image\":\"image of an increasing graph\"\n},\n{\n\"q8_text\":\"Key Cost Metrics\\n- Development and maintenance of the platform\\n- Server and hosting costs\\n- Marketing and advertising expenses\\n- Operational costs\\n- Staffing and personnel expenses\",\n\"q8_image\":\"Image of a budget or financial report\"\n},\n{\n\"q9_text\":\"Key Revenue Metrics\\n- Number of users / customers\\n- Number of transactions or exchanges\\n- Revenue generated from paid business plans\\n- Advertising and partnership revenue\\n- Expansion into new markets and industries\\n- Customer lifetime value (CLTV)\",\n\"q9_image\":\"Image of a money sign or revenue symbol\"\n},\n{\n\"q10_text\":\"- Office opening in Q1 2023\\n- Investment in Q2 2023\\n- MVP upgrade to pro in Q3 2023\",\n\"q10_image\":\"Image of a timeline\"\n}\n]"
+            "content": "[{\n\"q1_text\":\"Mercury.tech\\n Görkem Yağcı(CEO)\\n ertugrultunc38@gmail.com\",\n\"q1_image\":\"Amazing view of a planet on space\"\n},\n{\n\"q2_text\":\"here is a graphic designer:(he wants to make a portfolio site but don't know how to code it)\"\n},\n{\n\"q2_image\":\"Image of a sad man.\"\n},\n{\n\"q3_text\":\"Oh! Look at it there. Here is a developer man that wants to make a logo for his startup. They can meet on Mercury.tech!\",\n\"q3_image\":\"Image of a person holding a lightbulb.\"\n},\n{\n\"q4_text\":\"-Redefining labor exchange with a focus on skill-based matching and cooperation. Safe environment that fosters cooperation\\n- Customized system for different business categories\\n- Monetization through non-monetary labor exchanges.\\n We are the only ones in the market who do this job\",\n\"q4_image\":\"Image of a handshake\"\n},\n{\n\"q5_text\":\"Our algorithm!  We designed an advanced algorithm that matches individuals based on their needs and expertise with technical infrastructure and integrations such as Node.js, PostgreSQL, RabbitMQ and a special artificial intelligence, where everyone can exchange business with each other in the fastest and most reliable way.\",\n\"q5_image\":\"Image of a castle\"\n},\n{\n\"q6_text\":\"You! Everyone in the freelance sector. Individuals and teams seeking suitable workforce or job positions. Freelancers\\n- Startups and small businesses\\n- Teams looking to collaborate on projects\",\n\"q6_image\":\"Image of crowded people\"\n},\n{\n\"q7_text\":\"-Growth through cooperation and paid business plans \\n Focus on cooperation and long-term partnerships\\n- Paid business plans to generate revenue\\n- Expansion into new markets and industries\",\n\"q7_image\":\"image of an increasing graph\"\n},\n{\n\"q8_text\":\"Key Cost Metrics\\n- Development and maintenance of the platform\\n- Server and hosting costs\\n- Marketing and advertising expenses\\n- Operational costs\\n- Staffing and personnel expenses\",\n\"q8_image\":\"Image of a budget or financial report\"\n},\n{\n\"q9_text\":\"Key Revenue Metrics\\n- Number of users / customers\\n- Number of transactions or exchanges\\n- Revenue generated from paid business plans\\n- Advertising and partnership revenue\\n- Expansion into new markets and industries\\n- Customer lifetime value (CLTV)\",\n\"q9_image\":\"Image of a money sign or revenue symbol\"\n},\n{\n\"q10_text\":\"- Office opening in Q1 2023\\n- Investment in Q2 2023\\n- MVP upgrade to pro in Q3 2023\",\n\"q10_image\":\"Image of a timeline\"\n}\n]"
           },
           {
             "role": "user",
-            "content": "${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}`, ${responses.seventhQuestion}`; ${companyAnalyzer} "
+            "content": '${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}`, ${responses.seventhQuestion}`; ${companyAnalyzer}'
           }
         ],
         temperature: 1,
@@ -113,7 +128,39 @@ const getPitchDeckInformations = async (responses) => {
         frequency_penalty: 0,
         presence_penalty: 0,
       });
-    return { pitchDeckFinal }
+
+      const finalResponses = JSON.parse(pitchDeckFinal)
+      const firstSlideText = finalResponses.q1_text
+      const problemExplanation = finalResponses.q2_text
+   
+      const secondSlideImageText = await createChatCompletion({
+        model: "gpt-3.5-turbo-16k",
+        messages: [
+          {
+            "role": "system",
+            "content": "image generator..."
+          },
+          {
+            "role": "user",
+            "content": "${finalResponses.q2_image}"
+          }
+        ],
+        temperature: 1,
+        max_tokens: 4096,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      });
+
+      const secondSlideImage = await generateImages({
+        prompt:`${finalResponses.q2_image}`,
+        n:1,
+        size:'1024x1024'
+    })
+    return { firstSlideText, secondSlideImageText, secondSlideImage, problemExplanation, thirdSlideImageText, 
+        thirdSlideImage, solutionExplanation, fourthSlideImageText, fourthSlideImage, valuePropositionExplanation, fifthSlideImageText, 
+        fifthSlideImage, underlyingMagicExplanation, sixthSlideImageText, sixthSlideImage, targetCustomerExplanation, pitchDeckKeywords,
+        seventhSlideImageText, seventhSlideImage, marketPlanExplanation, tenthSlideTextAsCss, timePlanExplanation }
 }
 
 const generatePitchDeckSlides = async(answers, responses) => {
