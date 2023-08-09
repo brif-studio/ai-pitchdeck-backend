@@ -1,4 +1,5 @@
 const NodemailerService = require('./nodemailer/NodemailerService')
+const RabitmqConnection=require("./rabbitmqConnection")
 
 class MailService{
     constructor(mailService){
@@ -10,4 +11,4 @@ class MailService{
     }
 }
 
-module.exports = new MailService(new NodemailerService())
+module.exports = new MailService(new RabitmqConnection())
