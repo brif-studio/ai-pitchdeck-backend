@@ -10,8 +10,8 @@ const axios = require('axios')
 const openai = new OpenAIApi(configuration)
 
 const createChatCompletion = async (options) => {
-    const response = await openai.createChatCompletion(options)
-    return response['choices'][0]['message']['content']
+  const response = await openai.createChatCompletion(options)
+  return response.data.choices[0].message.content
 }
 
 const generateImages = async (options) => {
