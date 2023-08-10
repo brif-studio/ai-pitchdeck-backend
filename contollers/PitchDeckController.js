@@ -127,8 +127,11 @@ const getPitchDeckInformations = async (responses) => {
 
   const firstSlideText = finalResponses[0].text
   const secondQuestion = finalResponses[1].text
-  const secondSlideImage = 
-
+  const secondSlideImage = await generateImages({
+    prompt:`${dalleFinalResponses[0].promt}`,
+    n:1,
+    size:'1024x1024'
+})
 
   return {
     firstSlideText, secondSlideImageText, secondSlideImage, problemExplanation, thirdSlideImageText,
