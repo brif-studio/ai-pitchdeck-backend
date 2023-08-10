@@ -125,8 +125,10 @@ const getPitchDeckInformations = async (responses) => {
 
   const dalleFinalResponses = JSON.parse(dalleResponses)
 
- const firstSlideText = finalResponses[0].image
- const secondSlideImage = dalleFinalResponses[1].promt
+ const firstSlideText = finalResponses[0].text
+ const secondQuestion = finalResponses[2].text
+ const secondSlideImage = 
+
 
   return {
     firstSlideText, secondSlideImageText, secondSlideImage, problemExplanation, thirdSlideImageText,
