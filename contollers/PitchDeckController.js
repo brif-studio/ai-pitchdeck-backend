@@ -1,5 +1,5 @@
 const httpStatus = require('http-status')
-const PitchDeckService = require('../services/Sequelize/PitchDeckService')
+// const PitchDeckService = require('../services/Sequelize/PitchDeckService')
 const { createChatCompletion, generateImages } = require('../scripts/helpers/openaiHelper')
 const { SuccessResult, SuccessDataResult, ErrorResult, ErrorDataResult } = require('../scripts/utils/results')
 const { decodeToken } = require('../scripts/helpers/hashHelper')
@@ -50,8 +50,8 @@ class PitchDeckController {
   async generatePitchDeck(req, res) {
     const userId = decodeToken(req.headers.authorization.split(' ')[1]).id
     const responses = req.body
-    const pitchDeckInformation = await getPitchDeckInformations(responses)
-    const pitchDeckSlides = await generatePitchDeckSlides(pitchDeckInformation, responses)
+    const pitchDeckInformations = await getPitchDeckInformations(responses);
+    const pitchDeckSlides = await generatePitchDeckSlides(pitchDeckInformations.picthDeck, pitchDeckInformations.images, responses);
     const pitchDeck = {
       "user-id": `${userId}`,
       "template": "pitch-deck",
@@ -76,11 +76,11 @@ class PitchDeckController {
 
 const getPitchDeckInformations = async (responses) => {
 
-  const companyAnalyzerMessages = chatMessages.companyAnalyzerMessages.push(
-    {
-      "role": "user",
-      "content": `${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}, ${responses.seventhQuestion}`
-    })
+  const companyAnalyzerMessages = chatMessages.companyAnalyzerMessages
+  companyAnalyzerMessages.push({
+    "role": "user",
+    "content": `${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}, ${responses.seventhQuestion}`
+  })
   const companyAnalyzer = await createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: companyAnalyzerMessages,
@@ -91,7 +91,8 @@ const getPitchDeckInformations = async (responses) => {
     presence_penalty: 0,
   });
 
-  const pitchDeckFinalMessages = chatMessages.pitchDeckFinalMessages.push({
+  let pitchDeckFinalMessages = chatMessages.pitchDeckFinalMessages
+  pitchDeckFinalMessages.push({
     "role": "user",
     "content": `${responses.firstQuestion}, ${responses.secondQuestion}, ${responses.thirdQuestion}, ${responses.fourthQuestion}, ${responses.fifthQuestion}, ${responses.sixthQuestion}, ${responses.seventhQuestion}; ${companyAnalyzer}`
   })
@@ -106,9 +107,11 @@ const getPitchDeckInformations = async (responses) => {
     presence_penalty: 0,
   });
 
+  console.log(pitchDeckFinal, 'pitchDeckFinal')
   const finalResponses = JSON.parse(pitchDeckFinal)
 
-  const dallePromterMessages = chatMessages.dallePromterMessages.push({
+  let dallePromterMessages = chatMessages.dallePromterMessages
+  dallePromterMessages.push({
     "role": "user",
     "content": `${companyAnalyzer}, ${finalResponses[0].image}, ${finalResponses[1].image}, ${finalResponses[2].image}, ${finalResponses[3].image}, ${finalResponses[4].image}, ${finalResponses[5].image}, ${finalResponses[6].image}`
   })
@@ -123,106 +126,79 @@ const getPitchDeckInformations = async (responses) => {
     presence_penalty: 0,
   });
 
+  console.log(dalleResponses, 'dalleResponses')
   const dalleFinalResponses = JSON.parse(dalleResponses)
 
-  const firstSlideText = finalResponses[0].text
-  const problemExplanation = finalResponses[1].text
-  const secondSlideImage = await generateImages({
-    prompt:`${dalleFinalResponses[1].promt}`,
-    n:1,
-    size:'1024x1024'
-})
-  const solutionExplanation = finalResponses[2].text
-  const thirdSlideImage = await generateImages({
-    prompt:`${dalleFinalResponses[2].promt}`,
-    n:1,
-    size:'1024x1024'
-})
-  const valuePropositionExplanation = finalResponses[3].text
-  const fourthSlideImage = await generateImages({
-    prompt:`${dalleFinalResponses[3].promt}`,
-    n:1,
-    size:'1024x1024'
-  })
-  const underlyingMagicExplanation = finalResponses[4].text
-  const fifthSlideImage = await generateImages({
-    prompt:`${dalleFinalResponses[4].promt}`,
-    n:1,
-    size:'1024x1024'
-  })
-  const targetCustomerExplanation = finalResponses[4].text
-  const sixthSlideImageSlideImage = await generateImages({
-    prompt:`${dalleFinalResponses[5].promt}`,
-    n:1,
-    size:'1024x1024'
-  })
-  const marketPlanExplanation = finalResponses[5].text
-  const seventhSlideImage = await generateImages({
-    prompt:`${dalleFinalResponses[6].promt}`,
-    n:1,
-    size:'1024x1024'
-  })
-  
+  let images = []
+  for (let i = 0; i < dalleFinalResponses.length; i++) {
+    let image = await generateImages({
+      prompt: `${dalleFinalResponses[i].prompt}`,
+      n: 1,
+      size: '1024x1024'
+    })
+    images.push(image)
+  }
+
   return {
-    firstSlideText, secondSlideImageText, secondSlideImage, problemExplanation, thirdSlideImageText,
-    thirdSlideImage, solutionExplanation, fourthSlideImageText, fourthSlideImage, valuePropositionExplanation, fifthSlideImageText,
-    fifthSlideImage, underlyingMagicExplanation, sixthSlideImageText, sixthSlideImage, targetCustomerExplanation, pitchDeckKeywords,
-    seventhSlideImageText, seventhSlideImage, marketPlanExplanation, tenthSlideTextAsCss, timePlanExplanation
+    images: images,
+    picthDeck : finalResponses
   }
 }
 
-const generatePitchDeckSlides = async (answers, responses) => {
+const generatePitchDeckSlides = async (answers,images, responses) => {
   const pitchDeckSlides = []
   pitchDeckSlides.push({
     "slide-type": 'introducing',
     "company-details": {
+      "text": answers[0].text,
       "name-surname": responses.companyDetails.nameSurname,
       "title": responses.companyDetails.title,
       "email": responses.companyDetails.email,
       "phone-number": responses.companyDetails.phoneNumber,
-      "startup-name": responses.companyDetails.startupName,
+      "startup-name": responses.companyDetails["startup-name"],
       "date": responses.companyDetails.date
     }
   })
   pitchDeckSlides.push({
-    "slide-text": answers.problemExplanation,
+    "slide-text": answers[1].text,
     "slide-images": [{
-      "image-url": answers.secondSlideImage
+      "image-url": images[1]
     }]
   })
   pitchDeckSlides.push({
-    "slide-text": answers.solutionExplanation,
+    "slide-text": answers[2].text,
     "slide-images": [{
-      "image-url": answers.thirdSlideImage
+      "image-url": images[2]
     }]
   })
   pitchDeckSlides.push({
-    "slide-text": answers.valuePropositionExplanation,
+    "slide-text": answers[3].text,
     "slide-images": [{
-      "image-url": answers.fourthSlideImage
+      "image-url": images[3]
     }]
   })
   pitchDeckSlides.push({
-    "slide-text": answers.underlyingMagicExplanation,
+    "slide-text": answers[4].text,
     "slide-images": [{
-      "image-url": answers.fifthSlideImage
+      "image-url": images[4]
     }]
   })
   pitchDeckSlides.push({
-    "slide-text": answers.targetCustomerExplanation,
+    "slide-text": answers[5].text,
     "slide-images": [{
-      "image-url": answers.sixthSlideImage
+      "image-url": images[5]
     }]
   })
   pitchDeckSlides.push({
-    "slide-text": answers.marketPlanExplanation,
+    "slide-text": answers[6].text,
     "slide-images": [{
-      "image-url": answers.seventhSlideImage
+      "image-url": images[6]
     }]
   })
   pitchDeckSlides.push({
     "slide-type": "cost-metrics",
     "slide-text": {
+      "text":answers[7].text,
       "unit-transaction": responses.costMetrics.unitTransaction,
       "unit-costs": responses.costMetrics.unitCosts,
       "total-costs": responses.costMetrics.totalCosts,
@@ -232,6 +208,7 @@ const generatePitchDeckSlides = async (answers, responses) => {
   pitchDeckSlides.push({
     "slide-type": "revenue-metrics",
     "slide-text": {
+      "text":answers[8].text,
       "unit-transaction": responses.revenueMetrics.unitTransaction,
       "price": responses.revenueMetrics.price,
       "total-revenue": responses.revenueMetrics.totalRevenue,
@@ -239,7 +216,7 @@ const generatePitchDeckSlides = async (answers, responses) => {
     }
   })
   pitchDeckSlides.push({
-    "slide-text": answers.timePlanExplanation,
+    "slide-text": answers[9].text,
     "css-code": answers.tenthSlideTextAsCss,
     "time-plan-details": {
       "enterprise-release-date": responses.timePlanDetails.enterpriseReleaseDate,
@@ -254,4 +231,4 @@ const generatePitchDeckSlides = async (answers, responses) => {
 
 }
 
-module.exports = new PitchDeckController()
+module.exports = new PitchDeckController();
