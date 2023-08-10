@@ -108,6 +108,26 @@ const getPitchDeckInformations = async (responses) => {
 
   const finalResponses = JSON.parse(pitchDeckFinal)
 
+  const dallePromterMessages = chatMessages.dallePromterMessages.push({
+    "role": "user",
+    "content": `${companyAnalyzer}, ${finalResponses[0].image}, ${finalResponses[1].image}, ${finalResponses[2].image}, ${finalResponses[3].image}, ${finalResponses[4].image}, ${finalResponses[5].image}, ${finalResponses[6].image}`
+  })
+
+  const dalleResponses = await createChatCompletion({
+    model: "gpt-3.5-turbo-16k",
+    messages: dallePromterMessages,
+    temperature: 1,
+    max_tokens: 4096,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+
+  const dalleFinalResponses = JSON.parse(dalleResponses)
+
+ const firstSlideText = finalResponses[0].image
+ const secondSlideImage = dalleFinalResponses[1].promt
+
   return {
     firstSlideText, secondSlideImageText, secondSlideImage, problemExplanation, thirdSlideImageText,
     thirdSlideImage, solutionExplanation, fourthSlideImageText, fourthSlideImage, valuePropositionExplanation, fifthSlideImageText,
