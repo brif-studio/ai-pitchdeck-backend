@@ -6,7 +6,7 @@ class MailService {
     }
 
     sendMail(mail) {
-        rabitmqHelper.publishToExchange('sys.mail', JSON.stringify(mail));
+        rabitmqHelper.publishToExchange('sys.mail', JSON.stringify(mail.toJsonObject()));
     }
 }
 
