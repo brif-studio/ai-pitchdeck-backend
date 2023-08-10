@@ -4,20 +4,27 @@ require('dotenv').config()
 class RabbitMQHelper {
 
     async connect() {
-        this.connection = await amqplib.connect("amqp://localhost:5672")
+        this.connection = await amqplib.connect(process.env.RABBITMQ_CONNECTION_URL)
         this.channel = await this.connection.createChannel();
         this.exchange = (await this.channel.assertExchange(process.env.RABBITMQ_EXCHANGE, 'topic', { durable: false })).exchange;
     }
 
     async publishToExchange(key, message) {
-        await this.connect();
-        this.channel.publish(this.exchange, key, Buffer.from(message));
-        console.log("Mesaj başarıyla yayınlandı.");
-    } catch(error) {
-        console.error("Hata oluştu:", error);
+        try {
+            if (!this.connection) {
+                await this.connect()
+            }
+            this.channel.publish(this.exchange, key, Buffer.from(message));
+            console.log("Mesaj başarıyla yayınlandı.");
+        } catch (error) {
+            await this.connect()
+            console.log(error)
+        }
+
     }
 
 }
 
 
-module.exports = new RabbitMQHelper();
+const rabbitmqHelper = new RabbitMQHelper();
+module.exports = rabbitmqHelper;
