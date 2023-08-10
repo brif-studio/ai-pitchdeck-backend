@@ -138,8 +138,31 @@ const getPitchDeckInformations = async (responses) => {
     n:1,
     size:'1024x1024'
 })
-
-
+  const valuePropositionExplanation = finalResponses[3].text
+  const fourthSlideImage = await generateImages({
+    prompt:`${dalleFinalResponses[3].promt}`,
+    n:1,
+    size:'1024x1024'
+  })
+  const underlyingMagicExplanation = finalResponses[4].text
+  const fifthSlideImage = await generateImages({
+    prompt:`${dalleFinalResponses[4].promt}`,
+    n:1,
+    size:'1024x1024'
+  })
+  const targetCustomerExplanation = finalResponses[4].text
+  const sixthSlideImageSlideImage = await generateImages({
+    prompt:`${dalleFinalResponses[5].promt}`,
+    n:1,
+    size:'1024x1024'
+  })
+  const marketPlanExplanation = finalResponses[5].text
+  const seventhSlideImage = await generateImages({
+    prompt:`${dalleFinalResponses[6].promt}`,
+    n:1,
+    size:'1024x1024'
+  })
+  
   return {
     firstSlideText, secondSlideImageText, secondSlideImage, problemExplanation, thirdSlideImageText,
     thirdSlideImage, solutionExplanation, fourthSlideImageText, fourthSlideImage, valuePropositionExplanation, fifthSlideImageText,
