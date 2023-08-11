@@ -8,18 +8,21 @@ const { SuccessResult, SuccessDataResult, ErrorDataResult, ErrorResult } = requi
 const { AuthError } = require('../scripts/utils/Errors')
 require('express-async-errors')
 
-class AuthController{
-    async login(req, res){
+class AuthController {
+    async login(req, res, next) {
         const { emailOrUserName, password } = req.body
         const user = await UserService.getByUserNameOrEmail(emailOrUserName)
         if (user) {
             console.log(user.password)
             if (checkUser(user, password)) {
                 const responseData = {
-                    token: createToken({ id: user.id, email: user.email }),
+                    token: createToken({ id: user.id, email: user.email, mailCon: user.emailConfirmed }),
                     refreshToken: await RefreshTokenService.add(user.id)
                 }
-                return res.status(200).json(new SuccessDataResult('Login successfull!', responseData))
+                req.rd = responseData;
+
+                next();
+                //   return res.status(200).json(new SuccessDataResult('Login successfull!', responseData))
             } else {
                 return res.status(401).json(new ErrorResult('Your login information is wrong!'))
             }
@@ -29,7 +32,7 @@ class AuthController{
     }
 
 
-    async register(req, res){
+    async register(req, res) {
         const body = req.body
         const isUserExists = await UserService.checkUserExists(body)
         if (!isUserExists) {
@@ -42,7 +45,7 @@ class AuthController{
         await VerificationCodeService.add(addedUser.id)
         await RoleService.addRoleToUser('User', addedUser)
         const responseData = {
-            token: createToken({ id: addedUser.id, email: addedUser.email }),
+            token: createToken({ id: addedUser.id, email: addedUser.email, mailCon: addedUser.emailConfirmed }),
             refreshToken: await RefreshTokenService.add(addedUser.id)
         }
         res.status(200).json(new SuccessDataResult('User registered!', responseData))

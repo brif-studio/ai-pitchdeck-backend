@@ -4,24 +4,27 @@ require('dotenv').config()
 const connectDb = () => {
 
     const sequelize = new Sequelize(
-        process.env.DB,
-        process.env.USER,
-        process.env.PASSWORD, {
-        host: process.env.HOST,
-        dialect: process.env.DIALECT,
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
+        'mysql', // Varsayılan XAMPP veritabanı adı
+        'root', // Varsayılan XAMPP veritabanı kullanıcısı
+        '', // Varsayılan XAMPP veritabanı kullanıcısının parolası (boş bırakılabilir)
+        {
+            host: 'localhost', // XAMPP'nin kurulu olduğu sunucu adresi
+            dialect: 'mysql', // MySQL kullanılıyor
+            pool: {
+                max: 5,
+                min: 0,
+                acquire: 30000,
+                idle: 10000
+            }
         }
-    })
+    );
 
     sequelize.authenticate()
         .then(() => {
             console.log('connected..')
         })
         .catch(err => {
+            console.log("aaaaaaaaa")
             console.log('Error' + err)
         })
 
