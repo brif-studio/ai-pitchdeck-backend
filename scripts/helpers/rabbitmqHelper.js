@@ -10,11 +10,21 @@ class RabbitMQHelper {
     }
 
     async publishToExchange(key, message) {
-        this.channel.publish(this.exchange, key, Buffer.from(message));
+        try {
+            if (!this.connection) {
+                await this.connect()
+            }
+            this.channel.publish(this.exchange, key, Buffer.from(message));
+            console.log("Mesaj başarıyla yayınlandı.");
+        } catch (error) {
+            await this.connect()
+            console.log(error)
+        }
+
     }
+
 }
 
 
 const rabbitmqHelper = new RabbitMQHelper();
-rabbitmqHelper.connect();
 module.exports = rabbitmqHelper;

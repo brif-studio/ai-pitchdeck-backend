@@ -8,6 +8,15 @@ class Mail {
         this.html = html
         this.from = from
     }
+
+    toJsonObject(){
+        return {
+            to: this.to,
+            subject: this.subject,
+            html: this.html,
+            from: this.from
+        }
+    }
 }
 
 module.exports = Mail
