@@ -37,7 +37,7 @@ const connectDb = () => {
     db.userTokens = require('../models/UserToken.model')(sequelize, DataTypes)
     db.userWallets = require('../models/UserWallet.model')(sequelize, DataTypes)
 
-
+        sequelize.sync()
     //UserTokens
     db.userTokens.belongsTo(db.users, {
         foreignKey: 'userId',
