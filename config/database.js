@@ -1,8 +1,8 @@
 require('dotenv').config()
 module.exports = {
     development: {
-        "username": 'rifat',
-        "password": 'mysql',
+        "username": 'root',
+        "password": '',
         "database":'brif_dev',
         "host": 'localhost',
         "dialect": 'mysql'

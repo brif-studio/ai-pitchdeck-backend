@@ -17,7 +17,7 @@ class AuthController{
             console.log(user.password)
             if (checkUser(user, password)) {
                 const responseData = {
-                    token: createToken({ id: user.id, email: user.email }),
+                    token: createToken({ id: user.id, userName: user.userName, email: user.email }),
                     refreshToken: await RefreshTokenService.add(user.id)
                 }
                 return res.status(200).json(new SuccessDataResult('Login successfull!', responseData))
@@ -44,7 +44,7 @@ class AuthController{
         await RoleService.addRoleToUser('User', addedUser)
         await UserWalletService.add({userId: addedUser.id})
         const responseData = {
-            token: createToken({ id: addedUser.id, email: addedUser.email }),
+            token: createToken({ id: addedUser.id, userName: addedUser.userName, email: addedUser.email }),
             refreshToken: await RefreshTokenService.add(addedUser.id)
         }
         res.status(200).json(new SuccessDataResult('User registered!', responseData))
