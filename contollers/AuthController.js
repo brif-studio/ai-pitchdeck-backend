@@ -16,7 +16,7 @@ class AuthController {
             console.log(user.password)
             if (checkUser(user, password)) {
                 const responseData = {
-                    token: createToken({ id: user.id, email: user.email, mailCon: user.emailConfirmed }),
+                    token: createToken({ id: user.id, email: user.email, userName: user.userName, mailCon: user.emailConfirmed }),
                     refreshToken: await RefreshTokenService.add(user.id)
                 }
                 req.rd = responseData;
@@ -45,7 +45,7 @@ class AuthController {
         await VerificationCodeService.add(addedUser.id)
         await RoleService.addRoleToUser('User', addedUser)
         const responseData = {
-            token: createToken({ id: addedUser.id, email: addedUser.email, mailCon: addedUser.emailConfirmed }),
+            token: createToken({ id: addedUser.id, email: addedUser.email, userName: addedUser.userName, mailCon: addedUser.emailConfirmed }),
             refreshToken: await RefreshTokenService.add(addedUser.id)
         }
         res.status(200).json(new SuccessDataResult('User registered!', responseData))
