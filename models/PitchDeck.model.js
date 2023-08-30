@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const PitchDeck = sequelize.define('pitch_deck',{
+    const PitchDeck = sequelize.define('pitchDeck',{
         id:{
             type:DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         meta: {
             type:DataTypes.JSON
+        },
+        isCreated: {
+            type:DataTypes.BOOLEAN,
         }
     },{
         underscored:true

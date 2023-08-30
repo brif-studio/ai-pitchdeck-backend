@@ -1,21 +1,20 @@
 const { Sequelize, DataTypes } = require('sequelize')
 require('dotenv').config()
+const dbConfig = require('../config/database')[process.env.NODE_ENV]
+
+
 
 const connectDb = () => {
 
     const sequelize = new Sequelize(
-        process.env.DB,
-        process.env.USER,
-        process.env.PASSWORD, {
-        host: process.env.HOST,
-        dialect: process.env.DIALECT,
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        }
-    })
+        dbConfig.database,
+        dbConfig.username,
+        dbConfig.password, {
+        host: dbConfig.host,
+        dialect: dbConfig.dialect,
+        operatorsAliases: false
+    }
+    );
 
     sequelize.authenticate()
         .then(() => {
@@ -36,6 +35,7 @@ const connectDb = () => {
     db.verificationCodes = require('../models/VerificationCode.model.js')(sequelize, DataTypes)
     db.refreshTokens = require('../models/RefreshToken.model')(sequelize, DataTypes)
     db.userTokens = require('../models/UserToken.model')(sequelize, DataTypes)
+    db.userWallets = require('../models/UserWallet.model')(sequelize, DataTypes)
 
 
     //UserTokens
@@ -68,14 +68,11 @@ const connectDb = () => {
     db.verificationCodes.belongsTo(db.users)
     //UserRoles-Ends
 
-
     db.users.hasMany(db.pitchDecks)
     db.pitchDecks.belongsTo(db.users)
-
-    db.sequelize.sync({force:false})
-        .then(() => {
-            console.log('yes re-sync done!')
-        })
+ 
+    db.users.hasMany(db.userWallets)
+    db.userWallets.belongsTo(db.users)
 
     return db
 }

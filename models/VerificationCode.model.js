@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const VerificationCode = sequelize.define('verification_code',{
+    const VerificationCode = sequelize.define('verificationCode',{
         id:{
             type:DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
     const UserToken = sequelize.define('userToken', {
         id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
+            type:DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey:true
         },
         token: {
             type: DataTypes.STRING

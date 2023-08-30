@@ -1,13 +1,13 @@
-const NodemailerService = require('./nodemailer/NodemailerService')
+const rabitmqHelper = require("../../helpers/rabbitmqHelper")
 
-class MailService{
-    constructor(mailService){
+class MailService {
+    constructor(mailService) {
         this.mailService = mailService
     }
 
-    sendMail(mail){
-        return this.mailService.sendMail(mail)
+    sendMail(mail) {
+        rabitmqHelper.publishToExchange('sys.mail', JSON.stringify(mail.toJsonObject()));
     }
 }
 
-module.exports = new MailService(new NodemailerService())
+module.exports = new MailService()
