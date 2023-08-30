@@ -21,7 +21,7 @@ class UserWalletService extends SequelizeBaseService{
         throw new AuthError('User wallet not found')
     }
 
-    async increaseUserCredit(userId, amount) {
+    async increaseUserCredit(userId, amount=1) {
         const userWallet = await this.getOneFiltered({userId: userId})
         if (userWallet) {
             userWallet.credit += amount

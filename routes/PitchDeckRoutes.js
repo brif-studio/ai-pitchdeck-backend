@@ -10,5 +10,6 @@ router.route('/:id').get(AuthMiddleware('Admin,User'),PitchDeckController.getByI
 router.route('/add').post(ValidationMiddleware(pitchDeckValidationRules), AuthMiddleware('Admin,User'),PitchDeckController.generatePitchDeck)
 router.route('/chat').post(AuthMiddleware('Admin,User'),PitchDeckController.getChat)
 router.route('/update').put(AuthMiddleware('Admin,User'),PitchDeckController.updatePitchDeck)
+router.route('/delete').delete(AuthMiddleware('Admin,User'), PitchDeckController.deletePitchDeck)
 
 module.exports = router
